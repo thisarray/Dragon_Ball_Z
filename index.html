@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="en-US">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dragon Ball Z</title>
+  <script src="../jsgame0.js"></script>
+  <style type="text/css" media="screen">
+body {
+  background-color: white;
+  color: black;
+}
+.hidden {
+  display: none;
+}
+#original {
+  margin-left: 1em;
+}
+  </style>
+</head>
+
+<body>
+
+<main>
+<h1>Dragon Ball Z</h1>
+
+<canvas id="screen">
+The game screen appears here if your browser supports the Canvas API.
+</canvas>
+<section id="controls">
+  <button type="button" id="reset">Reset</button>
+  <button type="button" id="pause">Pause</button>
+</section>
+
+<p>They are moving so fast...</p>
+
+</main>
+
+<script>
+WIDTH = 800;
+HEIGHT = 600;
+
+/*
+ * Integer limit in pixels on the radius of the Clash circles.
+ */
+const LIMIT = 150;
+
+/*
+ * Return a random integer N such that min <= N < max.
+ */
+function getRandomInteger(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor((Math.random() * (max - min)) + min);
+}
+
+class Clash {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.radius = 0;
+  }
+
+  draw() {
+    screen.draw.circle([this.x, this.y], this.radius, 'white');
+  }
+
+  update() {
+    this.radius += 1;
+  }
+}
+
+var clashes;
+
+function reset() {
+  clashes = [];
+}
+
+function draw() {
+  // Draw the background image
+  screen.clear();
+
+  for (let clash of clashes) {
+    clash.draw();
+  }
+}
+
+function update() {
+  for (let clash of clashes) {
+    clash.update();
+  }
+  clashes = clashes.filter(c => c.radius < LIMIT);
+
+  if (getRandomInteger(0, 100) < 1) {
+    clashes.push(new Clash(getRandomInteger(0, WIDTH), getRandomInteger(0, HEIGHT)));
+  }
+}
+
+window.addEventListener('load', (event) => {
+  //images.LOAD('#imageLoader img');
+  //sounds.LOAD('#soundLoader audio');
+  reset();
+  screen.set_mode('#screen', '#reset', '#pause');
+});
+</script>
+</body>
+
+</html>
