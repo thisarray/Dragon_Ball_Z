@@ -21,6 +21,9 @@ body {
 </head>
 
 <body>
+<section id="soundLoader" class="hidden">
+  <audio class="hidden" controls preload="auto" src="sounds/rock_destroy0.ogg" data-name="rock_destroy0">Your browser does not support the audio element.</audio>
+</section>
 
 <main>
 <h1>Dragon Ball Z</h1>
@@ -34,6 +37,8 @@ The game screen appears here if your browser supports the Canvas API.
 </section>
 
 <p>They are moving so fast...</p>
+
+<p>Sound licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported</a>.</p>
 
 </main>
 
@@ -94,12 +99,13 @@ function update() {
 
   if (getRandomInteger(0, 100) < 1) {
     clashes.push(new Clash(getRandomInteger(0, WIDTH), getRandomInteger(0, HEIGHT)));
+    sounds['rock_destroy0'].play();
   }
 }
 
 window.addEventListener('load', (event) => {
   //images.LOAD('#imageLoader img');
-  //sounds.LOAD('#soundLoader audio');
+  sounds.LOAD('#soundLoader audio');
   reset();
   screen.set_mode('#screen', '#reset', '#pause');
 });
