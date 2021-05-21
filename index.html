@@ -28,7 +28,7 @@ body {
   <img class="hidden" src="images/background3.png" alt="background3" data-name="background3">
 </section>
 <section id="soundLoader" class="hidden">
-  <audio class="hidden" controls preload="auto" src="sounds/rock_destroy0.ogg" data-name="rock_destroy0">Your browser does not support the audio element.</audio>
+  <audio class="hidden" controls preload="auto" src="sounds/explosion.wav" data-name="explosion">Your browser does not support the audio element.</audio>
 </section>
 
 <main>
@@ -124,7 +124,7 @@ function update(dt) {
     }
     if (getRandomInteger(0, 100) < 1) {
       clashes.push(new Clash(getRandomInteger(0, WIDTH), getRandomInteger(0, HEIGHT)));
-      sounds['rock_destroy0'].play();
+      sounds.explosion.play();
     }
   }
 }
