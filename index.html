@@ -21,6 +21,12 @@ body {
 </head>
 
 <body>
+<section id="imageLoader" class="hidden">
+  <img class="hidden" src="images/background0.png" alt="background0" data-name="background0">
+  <img class="hidden" src="images/background1.png" alt="background1" data-name="background1">
+  <img class="hidden" src="images/background2.png" alt="background2" data-name="background2">
+  <img class="hidden" src="images/background3.png" alt="background3" data-name="background3">
+</section>
 <section id="soundLoader" class="hidden">
   <audio class="hidden" controls preload="auto" src="sounds/rock_destroy0.ogg" data-name="rock_destroy0">Your browser does not support the audio element.</audio>
 </section>
@@ -45,6 +51,16 @@ The game screen appears here if your browser supports the Canvas API.
 <script>
 WIDTH = 800;
 HEIGHT = 600;
+
+/*
+ * Integer count of background images.
+ */
+const BACKGROUND_COUNT = 4;
+
+/*
+ * Integer minimum number of seconds to stay on each background image.
+ */
+const DURATION = 15;
 
 /*
  * Integer limit in pixels on the radius of the Clash circles.
@@ -76,35 +92,45 @@ class Clash {
   }
 }
 
-var clashes;
+var clashes, backgroundIndex, delay;
 
 function reset() {
   clashes = [];
+  backgroundIndex = getRandomInteger(0, BACKGROUND_COUNT);
+  delay = 0;
 }
 
 function draw() {
   // Draw the background image
-  screen.clear();
+  screen.blit('background' + backgroundIndex, [0, 0]);
 
   for (let clash of clashes) {
     clash.draw();
   }
 }
 
-function update() {
+function update(dt) {
+  delay += dt;
+
   for (let clash of clashes) {
     clash.update();
   }
   clashes = clashes.filter(c => c.radius < LIMIT);
 
-  if (getRandomInteger(0, 100) < 1) {
-    clashes.push(new Clash(getRandomInteger(0, WIDTH), getRandomInteger(0, HEIGHT)));
-    sounds['rock_destroy0'].play();
+  if (clashes.length <= 0) {
+    if (delay > DURATION) {
+      backgroundIndex = getRandomInteger(0, BACKGROUND_COUNT);
+      delay = 0;
+    }
+    if (getRandomInteger(0, 100) < 1) {
+      clashes.push(new Clash(getRandomInteger(0, WIDTH), getRandomInteger(0, HEIGHT)));
+      sounds['rock_destroy0'].play();
+    }
   }
 }
 
 window.addEventListener('load', (event) => {
-  //images.LOAD('#imageLoader img');
+  images.LOAD('#imageLoader img');
   sounds.LOAD('#soundLoader audio');
   reset();
   screen.set_mode('#screen', '#reset', '#pause');
